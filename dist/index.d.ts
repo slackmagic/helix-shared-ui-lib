@@ -42,5 +42,5 @@ export { default as HelixUserAPI } from "./services/HelixUserAPI";
 export * from "./services/HelixUserAPI";
 export { default as Login } from "./components/login/Login";
 export * from "./components/login/Login";
-export { default as LMaintTheme } from "./components/theme/MainTheme";
+export { default as MaintTheme } from "./components/theme/MainTheme";
 export * from "./components/theme/MainTheme";

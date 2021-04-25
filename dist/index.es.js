@@ -19446,5 +19446,5 @@ function Login() {
                     jsx(Button$1, __assign({ fullWidth: true, variant: "contained", color: "primary", className: classes.submit, disabled: isButtonDisabled, onClick: function () { return handleLogin(); } }, { children: "Se connecter" }), void 0)] }), void 0) }), void 0) }, void 0));
 }
 
-export { AuthContext, AuthProvider, HelixAuth, HelixService, HelixUserAPI, mainTheme as LMaintTheme, Login, PrivateRoute, useAuth };
+export { AuthContext, AuthProvider, HelixAuth, HelixService, HelixUserAPI, Login, mainTheme as MaintTheme, PrivateRoute, useAuth };
 //# sourceMappingURL=index.es.js.map
