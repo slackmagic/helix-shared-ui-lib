@@ -13,7 +13,7 @@ export default function AuthProvider({ children }: Props) {
 
 	useEffect(() => {
 		loadUserFromStorage();
-	}, []);
+	}, [user]);
 
 	useEffect(() => {
 		const handle = setInterval(async () => {
