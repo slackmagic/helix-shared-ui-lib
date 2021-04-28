@@ -19,6 +19,7 @@ export default class HelixAuth {
 	}
 
 	saveUserToStorage(authenticate_data: IAuthenticateData): IUser | undefined {
+		console.log("saveUserToStorage");
 		this.saveItem("access-token", authenticate_data.access_token);
 		this.saveItem("refresh-token", authenticate_data.refresh_token);
 
@@ -29,6 +30,7 @@ export default class HelixAuth {
 	}
 
 	loadUserFromStorage(): IUser | undefined {
+		console.log("loadUserFromStorage");
 		var extractedUser: IUser | undefined = undefined;
 		const rawAccessToken: string | null = sessionStorage.getItem(
 			"access-token"
@@ -47,6 +49,7 @@ export default class HelixAuth {
 	}
 
 	signout(): void {
+		console.log("signout");
 		sessionStorage.removeItem("access-token");
 		sessionStorage.removeItem("refresh-token");
 		sessionStorage.removeItem("user");
