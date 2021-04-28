@@ -276,7 +276,6 @@ var HelixAuth = /** @class */ (function () {
     }
     HelixAuth.prototype.authenticate = function (login, password) {
         var _this = this;
-        console.log("authenticate");
         return this.helixUserAPI
             .login(login, password, function () { })
             .then(function (authenticate_data) {
@@ -288,7 +287,6 @@ var HelixAuth = /** @class */ (function () {
         });
     };
     HelixAuth.prototype.saveUserToStorage = function (authenticate_data) {
-        console.log("saveUserToStorage");
         this.saveItem("access-token", authenticate_data.access_token);
         this.saveItem("refresh-token", authenticate_data.refresh_token);
         var extractedUser = this.loadUserFromStorage();
@@ -296,10 +294,9 @@ var HelixAuth = /** @class */ (function () {
         return extractedUser;
     };
     HelixAuth.prototype.loadUserFromStorage = function () {
-        console.log("loadUserFromStorage");
         var extractedUser = undefined;
         var rawAccessToken = sessionStorage.getItem("access-token");
-        if (rawAccessToken !== undefined) {
+        if (rawAccessToken !== null) {
             var accessToken = o(rawAccessToken);
             extractedUser = {
                 name: accessToken.user,
@@ -310,7 +307,6 @@ var HelixAuth = /** @class */ (function () {
         return extractedUser;
     };
     HelixAuth.prototype.signout = function () {
-        console.log("signout");
         sessionStorage.removeItem("access-token");
         sessionStorage.removeItem("refresh-token");
         sessionStorage.removeItem("user");
@@ -345,7 +341,7 @@ function AuthProvider(_a) {
     var helixAuth = useState(new HelixAuth())[0];
     useEffect(function () {
         loadUserFromStorage();
-    }, [user]);
+    }, []);
     useEffect(function () {
         var handle = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
@@ -361,10 +357,7 @@ function AuthProvider(_a) {
         var user;
         return __generator(this, function (_a) {
             user = helixAuth.loadUserFromStorage();
-            console.log("retrieve USER");
-            console.log(user);
             if (user !== undefined) {
-                console.log("SET USER");
                 setUser(user);
             }
             return [2 /*return*/];

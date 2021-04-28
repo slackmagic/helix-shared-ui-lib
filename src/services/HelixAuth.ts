@@ -6,7 +6,6 @@ export default class HelixAuth {
 	helixUserAPI: HelixUserApi = new HelixUserApi();
 
 	authenticate(login: string, password: string): Promise<IUser | undefined> {
-		console.log("authenticate");
 		return this.helixUserAPI
 			.login(login, password, () => {})
 			.then((authenticate_data: IAuthenticateData) => {
@@ -19,7 +18,6 @@ export default class HelixAuth {
 	}
 
 	saveUserToStorage(authenticate_data: IAuthenticateData): IUser | undefined {
-		console.log("saveUserToStorage");
 		this.saveItem("access-token", authenticate_data.access_token);
 		this.saveItem("refresh-token", authenticate_data.refresh_token);
 
@@ -30,14 +28,13 @@ export default class HelixAuth {
 	}
 
 	loadUserFromStorage(): IUser | undefined {
-		console.log("loadUserFromStorage");
 		var extractedUser: IUser | undefined = undefined;
 		const rawAccessToken: string | null = sessionStorage.getItem(
 			"access-token"
 		);
 
-		if (rawAccessToken !== undefined) {
-			const accessToken: IAccessToken = decode<IAccessToken>(rawAccessToken!);
+		if (rawAccessToken !== null) {
+			const accessToken: IAccessToken = decode<IAccessToken>(rawAccessToken);
 			extractedUser = {
 				name: accessToken.user,
 				user_uuid: accessToken.user_uuid,
@@ -49,7 +46,6 @@ export default class HelixAuth {
 	}
 
 	signout(): void {
-		console.log("signout");
 		sessionStorage.removeItem("access-token");
 		sessionStorage.removeItem("refresh-token");
 		sessionStorage.removeItem("user");

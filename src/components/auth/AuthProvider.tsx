@@ -13,7 +13,7 @@ export default function AuthProvider({ children }: Props) {
 
 	useEffect(() => {
 		loadUserFromStorage();
-	}, [user]);
+	}, []);
 
 	useEffect(() => {
 		const handle = setInterval(async () => {
@@ -26,11 +26,7 @@ export default function AuthProvider({ children }: Props) {
 
 	const loadUserFromStorage = async () => {
 		const user: IUser | undefined = helixAuth.loadUserFromStorage();
-		console.log("retrieve USER");
-		console.log(user);
-
 		if (user !== undefined) {
-			console.log("SET USER");
 			setUser(user);
 		}
 	};
