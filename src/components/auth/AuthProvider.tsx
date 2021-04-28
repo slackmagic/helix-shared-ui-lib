@@ -25,8 +25,10 @@ export default function AuthProvider({ children }: Props) {
 	}, []);
 
 	const loadUserFromStorage = async () => {
-		//TODO: Check if existing before load
-		//setUser(helixAuth.loadUserFromStorage());
+		const user: IUser | undefined = helixAuth.loadUserFromStorage();
+		if (user !== undefined) {
+			setUser(user);
+		}
 	};
 
 	const authenticate = async (credentials: ICredentials) => {
