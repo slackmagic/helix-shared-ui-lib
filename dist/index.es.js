@@ -355,18 +355,15 @@ function AuthProvider(_a) {
     var _b = useState(undefined), user = _b[0], setUser = _b[1];
     var helixAuth = new HelixAuth();
     useEffect(function () {
-        console.log("__load: get user from storage");
         loadUserFromStorage();
     }, []);
     useEffect(function () {
+        var loadUser = helixAuth.loadUserFromStorage();
         var handle = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log("__refresh: check user");
-                console.log(JSON.stringify(user));
-                if (user !== undefined) {
-                    console.log("__refresh: retrieve token");
+                if (loadUser !== undefined) {
                     helixAuth
-                        .refresh(user.refresh_token)
+                        .refresh(loadUser.refresh_token)
                         .then(function (user) {
                         if (user !== undefined) {
                             setUser(user);
@@ -382,8 +379,6 @@ function AuthProvider(_a) {
         var loadUser = helixAuth.loadUserFromStorage();
         if (loadUser !== undefined) {
             setUser(loadUser);
-            console.log("__load: user loaded");
-            console.log(JSON.stringify(user));
         }
     };
     var authenticate = function (credentials) { return __awaiter(_this, void 0, void 0, function () {
