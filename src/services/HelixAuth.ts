@@ -41,6 +41,8 @@ export default class HelixAuth {
 			person_uuid: accessToken.person_uuid,
 			access_token: authenticate_data.access_token,
 			refresh_token: authenticate_data.refresh_token,
+			exp: new Date(accessToken.exp*1000),
+			iat: new Date(accessToken.iat*1000),
 		};
 
 		this.saveItem("user", JSON.stringify(extractedUser));

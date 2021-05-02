@@ -3,10 +3,11 @@ interface IAuthenticateData {
     refresh_token: string;
 }
 interface IAccessToken {
-    exp: number;
     user: string;
     user_uuid: string;
     person_uuid: string;
+    exp: number;
+    iat: number;
 }
 interface IRefreshToken {
     exp: number;
@@ -17,6 +18,8 @@ interface IUser {
     person_uuid: string;
     access_token: string;
     refresh_token: string;
+    exp: Date;
+    iat: Date;
 }
 interface IAuthContextProps {
     user?: IUser;

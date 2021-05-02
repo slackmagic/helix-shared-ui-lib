@@ -19,7 +19,6 @@ export default function AuthProvider({ children }: Props) {
 	useEffect(() => {
 		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
 
-		console.log(loadUser);
 		const handle = setInterval(async () => {
 			if (loadUser !== undefined) {
 				helixAuth
