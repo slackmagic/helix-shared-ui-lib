@@ -369,6 +369,7 @@ function AuthProvider(_a) {
         var handle = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 console.log("Check user for refreshing");
+                console.log(JSON.stringify(user));
                 if (user !== undefined) {
                     console.log("refreshing token...");
                     helixAuth
