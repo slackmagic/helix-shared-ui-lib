@@ -17,8 +17,11 @@ export default function AuthProvider({ children }: Props) {
 
 	useEffect(() => {
 		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
+		console.log(`__refresh: loadUser`);
+		console.log(loadUser);
 		const handle = setInterval(async () => {
 			if (loadUser !== undefined) {
+				console.log(`__refresh: retrieve token`);
 				helixAuth
 					.refresh(loadUser.refresh_token)
 					.then((user: IUser | undefined) => {
@@ -44,8 +47,6 @@ export default function AuthProvider({ children }: Props) {
 			.then((retrievedUser: IUser | undefined) => {
 				if (retrievedUser !== undefined) {
 					setUser(retrievedUser);
-					console.log(`__auth`);
-					console.log(JSON.stringify(user));
 				}
 			});
 	};
