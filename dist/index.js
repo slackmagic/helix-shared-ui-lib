@@ -363,15 +363,16 @@ function AuthProvider(_a) {
     var _b = React.useState(undefined), user = _b[0], setUser = _b[1];
     var helixAuth = React.useState(new HelixAuth())[0];
     React.useEffect(function () {
+        console.log("__load: get user from storage");
         loadUserFromStorage();
     }, []);
     React.useEffect(function () {
         var handle = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log("Check user for refreshing");
+                console.log("__refresh: check user");
                 console.log(JSON.stringify(user));
                 if (user !== undefined) {
-                    console.log("refreshing token...");
+                    console.log("__refresh: retrieve token");
                     helixAuth
                         .refresh(user.refresh_token)
                         .then(function (user) {
@@ -382,7 +383,7 @@ function AuthProvider(_a) {
                 }
                 return [2 /*return*/];
             });
-        }); }, 10 * 1 * 1000);
+        }); }, 5 * 1000);
         return function () { return clearInterval(handle); };
     }, []);
     var loadUserFromStorage = function () { return __awaiter(_this, void 0, void 0, function () {
@@ -391,6 +392,7 @@ function AuthProvider(_a) {
             user = helixAuth.loadUserFromStorage();
             if (user !== undefined) {
                 setUser(user);
+                console.log("__load: user loaded");
             }
             return [2 /*return*/];
         });
