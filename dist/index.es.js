@@ -354,14 +354,15 @@ var HelixAuth = /** @class */ (function () {
 var REFRESH_TIMEOUT = 10 * 60 * 1000;
 function AuthProvider(_a) {
     var _this = this;
-    var children = _a.children;
+    var children = _a.children, login_url = _a.login_url;
     var _b = useState(undefined), user = _b[0], setUser = _b[1];
     var helixAuth = new HelixAuth();
     useEffect(function () {
-        loadUserFromStorage();
-    }, []);
-    useEffect(function () {
+        console.log(login_url);
         var loadUser = helixAuth.loadUserFromStorage();
+        if (loadUser !== undefined) {
+            setUser(loadUser);
+        }
         var handle = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 if (loadUser !== undefined) {
@@ -378,12 +379,6 @@ function AuthProvider(_a) {
         }); }, REFRESH_TIMEOUT);
         return function () { return clearInterval(handle); };
     }, []);
-    var loadUserFromStorage = function () {
-        var loadUser = helixAuth.loadUserFromStorage();
-        if (loadUser !== undefined) {
-            setUser(loadUser);
-        }
-    };
     var authenticate = function (credentials) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             helixAuth

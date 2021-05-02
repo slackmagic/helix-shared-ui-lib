@@ -6,18 +6,19 @@ const REFRESH_TIMEOUT: number = 10 * 60 * 1000;
 
 type Props = {
 	children?: JSX.Element | JSX.Element[];
+	login_url?: string;
 };
 
-export default function AuthProvider({ children }: Props) {
+export default function AuthProvider({ children, login_url }: Props) {
 	const [user, setUser] = useState<undefined | IUser>(undefined);
 	const helixAuth = new HelixAuth();
 
 	useEffect(() => {
-		loadUserFromStorage();
-	}, []);
-
-	useEffect(() => {
+		console.log(login_url);
 		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
+		if (loadUser !== undefined) {
+			setUser(loadUser);
+		}
 
 		const handle = setInterval(async () => {
 			if (loadUser !== undefined) {
@@ -32,13 +33,6 @@ export default function AuthProvider({ children }: Props) {
 		}, REFRESH_TIMEOUT);
 		return () => clearInterval(handle);
 	}, []);
-
-	const loadUserFromStorage = () => {
-		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
-		if (loadUser !== undefined) {
-			setUser(loadUser);
-		}
-	};
 
 	const authenticate = async (credentials: ICredentials) => {
 		helixAuth
