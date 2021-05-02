@@ -17,10 +17,17 @@ export default function AuthProvider({ children }: Props) {
 
 	useEffect(() => {
 		const handle = setInterval(async () => {
-			console.log(`refreshing token...`);
-			//TODO: Refreshing token (if necessary)
-			setUser(undefined);
-		}, 10 * 60 * 1000);
+			if (user !== undefined) {
+				console.log(`refreshing token...`);
+				helixAuth
+					.refresh(user.refresh_token)
+					.then((user: IUser | undefined) => {
+						if (user !== undefined) {
+							setUser(user);
+						}
+					});
+			}
+		}, 10 * 1 * 1000);
 		return () => clearInterval(handle);
 	}, []);
 

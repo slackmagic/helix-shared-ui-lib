@@ -17,37 +17,46 @@ export default class HelixAuth {
 			});
 	}
 
-	saveUserToStorage(authenticate_data: IAuthenticateData): IUser | undefined {
-		this.saveItem("access-token", authenticate_data.access_token);
-		this.saveItem("refresh-token", authenticate_data.refresh_token);
+	refresh(token: string): Promise<IUser | undefined> {
+		return this.helixUserAPI
+			.refresh(token, () => {})
+			.then((authenticate_data: IAuthenticateData) => {
+				return this.saveUserToStorage(authenticate_data);
+			})
+			.catch(() => undefined)
+			.finally(() => {
+				setTimeout(() => {}, 500);
+			});
+	}
 
-		const extractedUser: IUser | undefined = this.loadUserFromStorage();
+	saveUserToStorage(authenticate_data: IAuthenticateData): IUser | undefined {
+		var extractedUser: IUser | undefined = undefined;
+		const accessToken: IAccessToken = decode<IAccessToken>(
+			authenticate_data.access_token
+		);
+
+		extractedUser = {
+			name: accessToken.user,
+			user_uuid: accessToken.user_uuid,
+			person_uuid: accessToken.person_uuid,
+			access_token: authenticate_data.access_token,
+			refresh_token: authenticate_data.refresh_token,
+		};
+
 		this.saveItem("user", JSON.stringify(extractedUser));
 
 		return extractedUser;
 	}
 
 	loadUserFromStorage(): IUser | undefined {
-		var extractedUser: IUser | undefined = undefined;
-		const rawAccessToken: string | null = sessionStorage.getItem(
-			"access-token"
-		);
-
-		if (rawAccessToken !== null) {
-			const accessToken: IAccessToken = decode<IAccessToken>(rawAccessToken);
-			extractedUser = {
-				name: accessToken.user,
-				user_uuid: accessToken.user_uuid,
-				person_uuid: accessToken.person_uuid,
-			};
-		}
+		const rawUser: string | null = sessionStorage.getItem("user");
+		var extractedUser: IUser | undefined =
+			rawUser !== null ? JSON.parse(rawUser) : undefined;
 
 		return extractedUser;
 	}
 
 	signout(): void {
-		sessionStorage.removeItem("access-token");
-		sessionStorage.removeItem("refresh-token");
 		sessionStorage.removeItem("user");
 	}
 

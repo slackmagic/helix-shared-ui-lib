@@ -11,4 +11,12 @@ export default class HelixUserAPI {
 			callback
 		);
 	}
+
+	public async refresh(token: string, callback: () => void): Promise<any> {
+		return this.helixService.put(
+			LOGIN,
+			JSON.stringify({ refresh_token: token }),
+			callback
+		);
+	}
 }

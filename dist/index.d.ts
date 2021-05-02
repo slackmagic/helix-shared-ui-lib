@@ -15,6 +15,8 @@ interface IUser {
     name: string;
     user_uuid: string;
     person_uuid: string;
+    access_token: string;
+    refresh_token: string;
 }
 interface IAuthContextProps {
     user?: IUser;

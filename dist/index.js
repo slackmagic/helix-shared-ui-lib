@@ -275,6 +275,13 @@ var HelixUserAPI = /** @class */ (function () {
             });
         });
     };
+    HelixUserAPI.prototype.refresh = function (token, callback) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.helixService.put(LOGIN, JSON.stringify({ refresh_token: token }), callback)];
+            });
+        });
+    };
     return HelixUserAPI;
 }());
 
@@ -294,29 +301,37 @@ var HelixAuth = /** @class */ (function () {
             setTimeout(function () { }, 500);
         });
     };
+    HelixAuth.prototype.refresh = function (token) {
+        var _this = this;
+        return this.helixUserAPI
+            .refresh(token, function () { })
+            .then(function (authenticate_data) {
+            return _this.saveUserToStorage(authenticate_data);
+        })
+            .catch(function () { return undefined; })
+            .finally(function () {
+            setTimeout(function () { }, 500);
+        });
+    };
     HelixAuth.prototype.saveUserToStorage = function (authenticate_data) {
-        this.saveItem("access-token", authenticate_data.access_token);
-        this.saveItem("refresh-token", authenticate_data.refresh_token);
-        var extractedUser = this.loadUserFromStorage();
+        var extractedUser = undefined;
+        var accessToken = o(authenticate_data.access_token);
+        extractedUser = {
+            name: accessToken.user,
+            user_uuid: accessToken.user_uuid,
+            person_uuid: accessToken.person_uuid,
+            access_token: authenticate_data.access_token,
+            refresh_token: authenticate_data.refresh_token,
+        };
         this.saveItem("user", JSON.stringify(extractedUser));
         return extractedUser;
     };
     HelixAuth.prototype.loadUserFromStorage = function () {
-        var extractedUser = undefined;
-        var rawAccessToken = sessionStorage.getItem("access-token");
-        if (rawAccessToken !== null) {
-            var accessToken = o(rawAccessToken);
-            extractedUser = {
-                name: accessToken.user,
-                user_uuid: accessToken.user_uuid,
-                person_uuid: accessToken.person_uuid,
-            };
-        }
+        var rawUser = sessionStorage.getItem("user");
+        var extractedUser = rawUser !== null ? JSON.parse(rawUser) : undefined;
         return extractedUser;
     };
     HelixAuth.prototype.signout = function () {
-        sessionStorage.removeItem("access-token");
-        sessionStorage.removeItem("refresh-token");
         sessionStorage.removeItem("user");
     };
     HelixAuth.prototype.saveItem = function (key, value) {
@@ -353,9 +368,14 @@ function AuthProvider(_a) {
     React.useEffect(function () {
         var handle = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                console.log("refreshing token...");
-                //TODO: Refreshing token (if necessary)
-                setUser(undefined);
+                if (user !== undefined) {
+                    console.log("refreshing token...");
+                    helixAuth.refresh("").then(function (user) {
+                        if (user !== undefined) {
+                            setUser(user);
+                        }
+                    });
+                }
                 return [2 /*return*/];
             });
         }); }, 10 * 60 * 1000);
