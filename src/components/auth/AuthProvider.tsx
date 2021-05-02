@@ -35,10 +35,11 @@ export default function AuthProvider({ children }: Props) {
 	}, []);
 
 	const loadUserFromStorage = async () => {
-		const user: IUser | undefined = helixAuth.loadUserFromStorage();
-		if (user !== undefined) {
-			setUser(user);
+		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
+		if (loadUser !== undefined) {
+			setUser(loadUser);
 			console.log(`__load: user loaded`);
+			console.log(JSON.stringify(user));
 		}
 	};
 
@@ -47,7 +48,8 @@ export default function AuthProvider({ children }: Props) {
 			.authenticate(credentials.login, credentials.password)
 			.then((user: IUser | undefined) => {
 				if (user !== undefined) {
-					setUser(user);
+					console.log(`__auth`);
+					console.log(JSON.stringify(user));
 				}
 			});
 	};

@@ -387,12 +387,13 @@ function AuthProvider(_a) {
         return function () { return clearInterval(handle); };
     }, []);
     var loadUserFromStorage = function () { return __awaiter(_this, void 0, void 0, function () {
-        var user;
+        var loadUser;
         return __generator(this, function (_a) {
-            user = helixAuth.loadUserFromStorage();
-            if (user !== undefined) {
-                setUser(user);
+            loadUser = helixAuth.loadUserFromStorage();
+            if (loadUser !== undefined) {
+                setUser(loadUser);
                 console.log("__load: user loaded");
+                console.log(JSON.stringify(user));
             }
             return [2 /*return*/];
         });
@@ -403,7 +404,8 @@ function AuthProvider(_a) {
                 .authenticate(credentials.login, credentials.password)
                 .then(function (user) {
                 if (user !== undefined) {
-                    setUser(user);
+                    console.log("__auth");
+                    console.log(JSON.stringify(user));
                 }
             });
             return [2 /*return*/];
