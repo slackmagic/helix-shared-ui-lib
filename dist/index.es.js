@@ -353,7 +353,7 @@ function AuthProvider(_a) {
     var _this = this;
     var children = _a.children;
     var _b = useState(undefined), user = _b[0], setUser = _b[1];
-    var helixAuth = useState(new HelixAuth())[0];
+    var helixAuth = new HelixAuth();
     useEffect(function () {
         console.log("__load: get user from storage");
         loadUserFromStorage();
@@ -378,25 +378,21 @@ function AuthProvider(_a) {
         }); }, 5 * 1000);
         return function () { return clearInterval(handle); };
     }, []);
-    var loadUserFromStorage = function () { return __awaiter(_this, void 0, void 0, function () {
-        var loadUser;
-        return __generator(this, function (_a) {
-            loadUser = helixAuth.loadUserFromStorage();
-            if (loadUser !== undefined) {
-                setUser(loadUser);
-                console.log("__load: user loaded");
-                console.log(JSON.stringify(user));
-            }
-            return [2 /*return*/];
-        });
-    }); };
+    var loadUserFromStorage = function () {
+        var loadUser = helixAuth.loadUserFromStorage();
+        if (loadUser !== undefined) {
+            setUser(loadUser);
+            console.log("__load: user loaded");
+            console.log(JSON.stringify(user));
+        }
+    };
     var authenticate = function (credentials) { return __awaiter(_this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             helixAuth
                 .authenticate(credentials.login, credentials.password)
-                .then(function (user) {
-                if (user !== undefined) {
-                    setUser(user);
+                .then(function (retrievedUser) {
+                if (retrievedUser !== undefined) {
+                    setUser(retrievedUser);
                     console.log("__auth");
                     console.log(JSON.stringify(user));
                 }
@@ -404,13 +400,10 @@ function AuthProvider(_a) {
             return [2 /*return*/];
         });
     }); };
-    var logout = function () { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            helixAuth.signout();
-            setUser(undefined);
-            return [2 /*return*/];
-        });
-    }); };
+    var logout = function () {
+        helixAuth.signout();
+        setUser(undefined);
+    };
     return (jsx(AuthContext.Provider, __assign({ value: {
             user: user,
             isAuthenticated: !!user,

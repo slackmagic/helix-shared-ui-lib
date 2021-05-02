@@ -9,7 +9,7 @@ type Props = {
 
 export default function AuthProvider({ children }: Props) {
 	const [user, setUser] = useState<undefined | IUser>(undefined);
-	const [helixAuth] = useState<HelixAuth>(new HelixAuth());
+	const helixAuth = new HelixAuth();
 
 	useEffect(() => {
 		console.log(`__load: get user from storage`);
@@ -34,7 +34,7 @@ export default function AuthProvider({ children }: Props) {
 		return () => clearInterval(handle);
 	}, []);
 
-	const loadUserFromStorage = async () => {
+	const loadUserFromStorage = () => {
 		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
 		if (loadUser !== undefined) {
 			setUser(loadUser);
@@ -46,16 +46,16 @@ export default function AuthProvider({ children }: Props) {
 	const authenticate = async (credentials: ICredentials) => {
 		helixAuth
 			.authenticate(credentials.login, credentials.password)
-			.then((user: IUser | undefined) => {
-				if (user !== undefined) {
-					setUser(user);
+			.then((retrievedUser: IUser | undefined) => {
+				if (retrievedUser !== undefined) {
+					setUser(retrievedUser);
 					console.log(`__auth`);
 					console.log(JSON.stringify(user));
 				}
 			});
 	};
 
-	const logout = async () => {
+	const logout = () => {
 		helixAuth.signout();
 		setUser(undefined);
 	};
