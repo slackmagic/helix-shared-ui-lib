@@ -362,7 +362,9 @@ function AuthProvider(_a) {
             return __generator(this, function (_a) {
                 if (user !== undefined) {
                     console.log("refreshing token...");
-                    helixAuth.refresh("").then(function (user) {
+                    helixAuth
+                        .refresh(user.refresh_token)
+                        .then(function (user) {
                         if (user !== undefined) {
                             setUser(user);
                         }
@@ -370,7 +372,7 @@ function AuthProvider(_a) {
                 }
                 return [2 /*return*/];
             });
-        }); }, 10 * 60 * 1000);
+        }); }, 10 * 1 * 1000);
         return function () { return clearInterval(handle); };
     }, []);
     var loadUserFromStorage = function () { return __awaiter(_this, void 0, void 0, function () {
