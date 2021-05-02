@@ -48,6 +48,7 @@ export default function AuthProvider({ children }: Props) {
 			.authenticate(credentials.login, credentials.password)
 			.then((user: IUser | undefined) => {
 				if (user !== undefined) {
+					setUser(user);
 					console.log(`__auth`);
 					console.log(JSON.stringify(user));
 				}
