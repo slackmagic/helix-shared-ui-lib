@@ -17,6 +17,7 @@ export default function AuthProvider({ children }: Props) {
 
 	useEffect(() => {
 		const handle = setInterval(async () => {
+			console.log(`Check user for refreshing`);
 			if (user !== undefined) {
 				console.log(`refreshing token...`);
 				helixAuth
