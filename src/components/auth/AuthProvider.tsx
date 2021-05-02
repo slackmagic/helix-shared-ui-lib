@@ -11,10 +11,9 @@ type Props = {
 
 export default function AuthProvider({ children, login_url }: Props) {
 	const [user, setUser] = useState<undefined | IUser>(undefined);
-	const helixAuth = new HelixAuth();
+	const helixAuth = new HelixAuth(login_url);
 
 	useEffect(() => {
-		console.log(login_url);
 		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
 		if (loadUser !== undefined) {
 			setUser(loadUser);

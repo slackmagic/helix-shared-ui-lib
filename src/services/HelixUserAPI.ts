@@ -3,10 +3,19 @@ const LOGIN = "/api/login";
 
 export default class HelixUserAPI {
 	helixService: HelixService = new HelixService();
+	host?: string;
 
-	public async login(login: string, password: string, callback: () => void): Promise<any> {
+	constructor(host?: string) {
+		this.host = host !== undefined ? host : "";
+	}
+
+	public async login(
+		login: string,
+		password: string,
+		callback: () => void
+	): Promise<any> {
 		return this.helixService.post(
-			LOGIN,
+			this.host + LOGIN,
 			JSON.stringify({ login: login, password: password }),
 			callback
 		);
@@ -14,7 +23,7 @@ export default class HelixUserAPI {
 
 	public async refresh(token: string, callback: () => void): Promise<any> {
 		return this.helixService.put(
-			LOGIN,
+			this.host + LOGIN,
 			JSON.stringify({ refresh_token: token }),
 			callback
 		);

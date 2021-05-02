@@ -257,20 +257,21 @@ var HelixService = /** @class */ (function () {
 
 var LOGIN = "/api/login";
 var HelixUserAPI = /** @class */ (function () {
-    function HelixUserAPI() {
+    function HelixUserAPI(host) {
         this.helixService = new HelixService();
+        this.host = host !== undefined ? host : "";
     }
     HelixUserAPI.prototype.login = function (login, password, callback) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.helixService.post(LOGIN, JSON.stringify({ login: login, password: password }), callback)];
+                return [2 /*return*/, this.helixService.post(this.host + LOGIN, JSON.stringify({ login: login, password: password }), callback)];
             });
         });
     };
     HelixUserAPI.prototype.refresh = function (token, callback) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.helixService.put(LOGIN, JSON.stringify({ refresh_token: token }), callback)];
+                return [2 /*return*/, this.helixService.put(this.host + LOGIN, JSON.stringify({ refresh_token: token }), callback)];
             });
         });
     };
@@ -278,8 +279,8 @@ var HelixUserAPI = /** @class */ (function () {
 }());
 
 var HelixAuth = /** @class */ (function () {
-    function HelixAuth() {
-        this.helixUserAPI = new HelixUserAPI();
+    function HelixAuth(host) {
+        this.helixUserAPI = new HelixUserAPI(host);
     }
     HelixAuth.prototype.authenticate = function (login, password) {
         var _this = this;
@@ -356,9 +357,8 @@ function AuthProvider(_a) {
     var _this = this;
     var children = _a.children, login_url = _a.login_url;
     var _b = useState(undefined), user = _b[0], setUser = _b[1];
-    var helixAuth = new HelixAuth();
+    var helixAuth = new HelixAuth(login_url);
     useEffect(function () {
-        console.log(login_url);
         var loadUser = helixAuth.loadUserFromStorage();
         if (loadUser !== undefined) {
             setUser(loadUser);

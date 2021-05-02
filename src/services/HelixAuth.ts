@@ -3,7 +3,11 @@ import HelixUserApi from "./HelixUserAPI";
 import { IUser, IAuthenticateData, IAccessToken } from "../index";
 
 export default class HelixAuth {
-	helixUserAPI: HelixUserApi = new HelixUserApi();
+	helixUserAPI: HelixUserApi;
+	
+	constructor(host?: string) {
+		this.helixUserAPI = new HelixUserApi(host);
+	}
 
 	authenticate(login: string, password: string): Promise<IUser | undefined> {
 		return this.helixUserAPI
@@ -41,8 +45,8 @@ export default class HelixAuth {
 			person_uuid: accessToken.person_uuid,
 			access_token: authenticate_data.access_token,
 			refresh_token: authenticate_data.refresh_token,
-			exp: new Date(accessToken.exp*1000),
-			iat: new Date(accessToken.iat*1000),
+			exp: new Date(accessToken.exp * 1000),
+			iat: new Date(accessToken.iat * 1000),
 		};
 
 		this.saveItem("user", JSON.stringify(extractedUser));
