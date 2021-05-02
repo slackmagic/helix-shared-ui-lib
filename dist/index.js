@@ -357,6 +357,7 @@ var HelixAuth = /** @class */ (function () {
     return HelixAuth;
 }());
 
+var REFRESH_TIMEOUT = 10 * 60 * 1000;
 function AuthProvider(_a) {
     var _this = this;
     var children = _a.children;
@@ -367,12 +368,10 @@ function AuthProvider(_a) {
     }, []);
     React.useEffect(function () {
         var loadUser = helixAuth.loadUserFromStorage();
-        console.log("__refresh: loadUser");
         console.log(loadUser);
         var handle = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 if (loadUser !== undefined) {
-                    console.log("__refresh: retrieve token");
                     helixAuth
                         .refresh(loadUser.refresh_token)
                         .then(function (user) {
@@ -383,7 +382,7 @@ function AuthProvider(_a) {
                 }
                 return [2 /*return*/];
             });
-        }); }, 5 * 1000);
+        }); }, REFRESH_TIMEOUT);
         return function () { return clearInterval(handle); };
     }, []);
     var loadUserFromStorage = function () {

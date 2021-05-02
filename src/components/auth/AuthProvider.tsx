@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import AuthContext from "./AuthContext";
 import { IUser, ICredentials } from "../../index";
 import HelixAuth from "../../services/HelixAuth";
+const REFRESH_TIMEOUT: number = 10 * 60 * 1000;
 
 type Props = {
 	children?: JSX.Element | JSX.Element[];
@@ -17,11 +18,10 @@ export default function AuthProvider({ children }: Props) {
 
 	useEffect(() => {
 		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
-		console.log(`__refresh: loadUser`);
+
 		console.log(loadUser);
 		const handle = setInterval(async () => {
 			if (loadUser !== undefined) {
-				console.log(`__refresh: retrieve token`);
 				helixAuth
 					.refresh(loadUser.refresh_token)
 					.then((user: IUser | undefined) => {
@@ -30,7 +30,7 @@ export default function AuthProvider({ children }: Props) {
 						}
 					});
 			}
-		}, 5 * 1000);
+		}, REFRESH_TIMEOUT);
 		return () => clearInterval(handle);
 	}, []);
 
