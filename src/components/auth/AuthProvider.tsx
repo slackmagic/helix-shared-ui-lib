@@ -10,6 +10,7 @@ type Props = {
 };
 
 export default function AuthProvider({ children, login_url }: Props) {
+	const [isLoading, setIsLoading] = useState(true);
 	const [user, setUser] = useState<undefined | IUser>(undefined);
 	const helixAuth = new HelixAuth(login_url);
 
@@ -17,9 +18,11 @@ export default function AuthProvider({ children, login_url }: Props) {
 		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
 		if (loadUser !== undefined) {
 			setUser(loadUser);
+			setIsLoading(false);
 		}
 
 		const handle = setInterval(async () => {
+			setIsLoading(true);
 			if (loadUser !== undefined) {
 				helixAuth
 					.refresh(loadUser.refresh_token)
@@ -27,6 +30,7 @@ export default function AuthProvider({ children, login_url }: Props) {
 						if (user !== undefined) {
 							setUser(user);
 						}
+						setIsLoading(false);
 					});
 			}
 		}, REFRESH_TIMEOUT);
@@ -53,6 +57,7 @@ export default function AuthProvider({ children, login_url }: Props) {
 			value={{
 				user,
 				isAuthenticated: !!user,
+				isLoading: isLoading,
 				authenticate: authenticate,
 				logout: logout,
 			}}
