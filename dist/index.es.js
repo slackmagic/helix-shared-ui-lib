@@ -80,6 +80,7 @@ function __generator(thisArg, body) {
 var contextDefaultValues = {
     user: undefined,
     isAuthenticated: false,
+    isLoading: false,
     authenticate: function () { },
     logout: function () { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
         return [2 /*return*/, null];
@@ -356,15 +357,18 @@ var REFRESH_TIMEOUT = 10 * 60 * 1000;
 function AuthProvider(_a) {
     var _this = this;
     var children = _a.children, login_url = _a.login_url;
-    var _b = useState(undefined), user = _b[0], setUser = _b[1];
+    var _b = useState(true), isLoading = _b[0], setIsLoading = _b[1];
+    var _c = useState(undefined), user = _c[0], setUser = _c[1];
     var helixAuth = new HelixAuth(login_url);
     useEffect(function () {
         var loadUser = helixAuth.loadUserFromStorage();
         if (loadUser !== undefined) {
             setUser(loadUser);
+            setIsLoading(false);
         }
         var handle = setInterval(function () { return __awaiter(_this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                setIsLoading(true);
                 if (loadUser !== undefined) {
                     helixAuth
                         .refresh(loadUser.refresh_token)
@@ -372,6 +376,7 @@ function AuthProvider(_a) {
                         if (user !== undefined) {
                             setUser(user);
                         }
+                        setIsLoading(false);
                     });
                 }
                 return [2 /*return*/];
@@ -398,6 +403,7 @@ function AuthProvider(_a) {
     return (jsx(AuthContext.Provider, __assign({ value: {
             user: user,
             isAuthenticated: !!user,
+            isLoading: isLoading,
             authenticate: authenticate,
             logout: logout,
         } }, { children: children }), void 0));

@@ -24,6 +24,7 @@ interface IUser {
 interface IAuthContextProps {
     user?: IUser;
     isAuthenticated: boolean;
+    isLoading: boolean;
     authenticate: (credentials: ICredentials) => void;
     logout: () => void;
 }
