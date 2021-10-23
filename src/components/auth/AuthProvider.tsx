@@ -7,9 +7,14 @@ const REFRESH_TIMEOUT: number = 10 * 60 * 1000;
 type Props = {
 	children?: JSX.Element | JSX.Element[];
 	login_url?: string;
+	refresh_timeout?: number;
 };
 
-export default function AuthProvider({ children, login_url }: Props) {
+export default function AuthProvider({
+	children,
+	login_url,
+	refresh_timeout,
+}: Props) {
 	const [user, setUser] = useState<undefined | IUser>(undefined);
 	const helixAuth = new HelixAuth(login_url);
 
@@ -23,17 +28,20 @@ export default function AuthProvider({ children, login_url }: Props) {
 			setUser(loadedUser);
 		}
 
-		const handle = setInterval(async () => {
-			if (loadedUser !== undefined) {
-				helixAuth
-					.refresh(loadedUser.refresh_token)
-					.then((user: IUser | undefined) => {
-						if (user !== undefined) {
-							setUser(user);
-						}
-					});
-			}
-		}, REFRESH_TIMEOUT);
+		const handle = setInterval(
+			async () => {
+				if (loadedUser !== undefined) {
+					helixAuth
+						.refresh(loadedUser.refresh_token)
+						.then((user: IUser | undefined) => {
+							if (user !== undefined) {
+								setUser(user);
+							}
+						});
+				}
+			},
+			refresh_timeout ? refresh_timeout : REFRESH_TIMEOUT
+		);
 		return () => clearInterval(handle);
 	}, []);
 
