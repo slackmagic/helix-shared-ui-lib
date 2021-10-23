@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AuthContext from "./AuthContext";
 import { IUser, ICredentials } from "../../index";
 import HelixAuth from "../../services/HelixAuth";
@@ -10,27 +10,27 @@ type Props = {
 };
 
 export default function AuthProvider({ children, login_url }: Props) {
-	const [isLoading, setIsLoading] = useState(true);
 	const [user, setUser] = useState<undefined | IUser>(undefined);
 	const helixAuth = new HelixAuth(login_url);
 
+	const cachedUser = useMemo(() => {
+		return helixAuth.loadUserFromStorage();
+	}, [user]);
+
 	useEffect(() => {
-		const loadUser: IUser | undefined = helixAuth.loadUserFromStorage();
-		if (loadUser !== undefined) {
-			setUser(loadUser);
-			setIsLoading(false);
+		const loadedUser: IUser | undefined = helixAuth.loadUserFromStorage();
+		if (loadedUser !== undefined) {
+			setUser(loadedUser);
 		}
 
 		const handle = setInterval(async () => {
-			setIsLoading(true);
-			if (loadUser !== undefined) {
+			if (loadedUser !== undefined) {
 				helixAuth
-					.refresh(loadUser.refresh_token)
+					.refresh(loadedUser.refresh_token)
 					.then((user: IUser | undefined) => {
 						if (user !== undefined) {
 							setUser(user);
 						}
-						setIsLoading(false);
 					});
 			}
 		}, REFRESH_TIMEOUT);
@@ -55,9 +55,8 @@ export default function AuthProvider({ children, login_url }: Props) {
 	return (
 		<AuthContext.Provider
 			value={{
-				user,
-				isAuthenticated: !!user,
-				isLoading: isLoading,
+				user: cachedUser,
+				isAuthenticated: !!cachedUser,
 				authenticate: authenticate,
 				logout: logout,
 			}}

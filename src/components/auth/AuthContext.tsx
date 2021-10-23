@@ -4,7 +4,6 @@ import { IAuthContextProps } from "../../index";
 const contextDefaultValues: IAuthContextProps = {
 	user: undefined,
 	isAuthenticated: false,
-	isLoading: false,
 	authenticate: () => {},
 	logout: async () => null,
 };
